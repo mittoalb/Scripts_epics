@@ -19,7 +19,7 @@ pwd
 
 
 sleep 2
-wget https://github.com/mittoalb/Scripts_epics/blob/main/assemble_synApps.sh
+wget https://raw.githubusercontent.com/mittoalb/Scripts_epics/main/assemble_synApps.sh
 
 echo -e "\e[32mBuilding synApps\e[0m"
 

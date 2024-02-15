@@ -79,3 +79,35 @@ fi
 cd $HOME/epics/synApps/support
 
 make -sj
+
+###################################################################################################################
+###USE FOR SPINNAKER CAMERA
+###################################################################################################################
+PATH_START=$HOME/epics/synApps/support/areaDetector-R3-11/ADSimDetector/iocs/simDetectorIOC/iocBoot/iocSimDetector
+cd $PATH_START
+
+
+START_CONTENT="#!/bin/bash
+
+export EPICS_APP_AD=\$HOME/epics/synApps/support/areaDetector-R3-11/ADCore
+export EPICS_APP_ADGENICAM=\$HOME/epics/synApps/support/areaDetector-R3-11/ADGenICam
+export EPICS_APP_ADSpinnaker=\$HOME/epics/synApps/support/areaDetector-R3-11/ADSpinnaker
+
+# Prepare MEDM path
+if [ -z \"\$EPICS_DISPLAY_PATH\" ]; then
+    export EPICS_DISPLAY_PATH='.'
+else
+    export EPICS_DISPLAY_PATH=\$EPICS_DISPLAY_PATH:\$EPICS_APP_ADSpinnaker/spinnakerApp/op/adl
+    export EPICS_DISPLAY_PATH=\$EPICS_DISPLAY_PATH:\$EPICS_APP_ADGENICAM/GenICamApp/op/adl
+    export EPICS_DISPLAY_PATH=\$EPICS_DISPLAY_PATH:\$EPICS_APP_AD/ADApp/op/adl
+fi
+
+medm -x -macro \"P=13SP1:, R=cam1:, C=FLIR-Oryx-ORX-10G-310S9M\" ../../../../spinnakerApp/op/adl/ADSpinnaker.adl &
+
+../../bin/linux-x86_64/spinnakerApp st.cmd.oryx_51S5
+"
+
+echo "$START_CONTENT" > $PATH_START/start_epics
+chmod +x $PATH_START/start_epics
+
+
